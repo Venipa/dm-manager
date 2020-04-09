@@ -17,15 +17,9 @@ const gulp_tslint = () => _gulp_tslint = _gulp_tslint || require('gulp-tslint');
 const tslint = () => _tslint = _tslint || require('tslint');
 const linter = () => _linter = _linter || tslint().Linter.createProgram('tsconfig.json');
 
-gulp.task('default', ['build']);
-gulp.task('build:vscode', cb => runSequence()('lint', 'build', cb));
-gulp.task('gh-prebuild', cb => runSequence()('build', 'gh-prebuild-prepare', cb));
-
-gulp.task('pause', cb => setTimeout(() => cb(), 1e3));
-gulp.task('tests', cb => runSequence()('lint', 'build', 'pause', 'build:tests', cb));
 
 gulp.task('lint', () => {
-	gulp.src('src/**/*.ts')
+	return gulp.src('src/**/*.ts')
 		.pipe(gulp_tslint()({
 			configuration: 'tslint.json',
 			formatter: 'prose',
@@ -60,7 +54,7 @@ gulp.task('gh-prebuild-prepare', () => {
 		'!../prebuild/.git/**'
 	], { force: true });
 	gulp.src('bin/**/*.*').pipe(gulp.dest('../prebuild/bin'));
-	gulp.src('package.json').pipe(gulp.dest('../prebuild'));
+	return gulp.src('package.json').pipe(gulp.dest('../prebuild'));
 })
 
 gulp.task('build:tests', () => {
@@ -76,3 +70,10 @@ gulp.task('build:tests', () => {
 		.pipe(gulp_sourcemaps.write())
 		.pipe(gulp.dest('test/'));
 });
+
+gulp.task('default', gulp.series('build'));
+gulp.task('build:vscode', gulp.series('lint', 'build'));
+gulp.task('gh-prebuild', gulp.series('build', 'gh-prebuild-prepare'));
+
+gulp.task('pause', cb => setTimeout(() => cb(), 1e3));
+gulp.task('tests', gulp.series('lint', 'build', 'pause', 'build:tests'));
