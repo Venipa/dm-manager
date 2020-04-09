@@ -160,6 +160,8 @@ export class DMManager extends Plugin implements IPlugin
 		if (message.embeds[0] && message.channel.type !== 'dm') return;
 		if (message.channel.type !== 'dm' && message.guild.id !== this._guildID) return;
 		if (message.guild && message.channel.id === message.guild.id) return;
+		const prefix = await this._client.storage.get('prefix');
+		if (this._client.commands.map(c => [c.name, ...(c.aliases || [])]).findIndex(c => c.includes(message.content.slice(message.content.indexOf(prefix) === 0 ? 1 : 0))) !== -1) return;
 		if (message.author.id !== this._client.user.id
 			&& !this._channels.has(message.author.id) && !message.guild)
 			await this.createNewChannel(message.author);
