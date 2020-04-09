@@ -124,7 +124,7 @@ export class DMManager extends Plugin implements IPlugin
 		try
 		{
 			newChannel = <TextChannel> await this._guild.channels
-				.create(`${normalize(user.username) || 'unicode'}-${user.discriminator}`, { type: 'text', parent: this._categoryID });
+				.create(`${normalize(user.username) || 'unicode'}-${user.discriminator}`, { type: 'text', parent: this._categoryID ? this._guild.channels.find(x => x.id === this._categoryID) : undefined });
 			this._channels.set(user.id, newChannel);
 			this.storeOpenChannels();
 		}
@@ -156,6 +156,7 @@ export class DMManager extends Plugin implements IPlugin
 	 */
 	private async handleMessage(message: Message): Promise<void>
 	{
+		if (message.author.bot) return;
 		if (await this.isBlacklisted(message.author)) return;
 		if (message.embeds[0] && message.channel.type !== 'dm') return;
 		if (message.channel.type !== 'dm' && message.guild.id !== this._guildID) return;
