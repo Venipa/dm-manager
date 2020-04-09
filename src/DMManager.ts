@@ -193,7 +193,7 @@ export class DMManager extends Plugin implements IPlugin
 					.setDescription(err));
 					return;
 			}
-			await message.react('✔');
+			await message.react('✅');
 		}
 	}
 
