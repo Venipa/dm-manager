@@ -81,7 +81,7 @@ class DMManager extends core_1.Plugin {
         let newChannel;
         try {
             newChannel = await this._guild.channels
-                .create(`${Util_1.normalize(user.username) || 'unicode'}-${user.discriminator}`, { type: 'text', parent: this._categoryID });
+                .create(`${Util_1.normalize(user.username) || 'unicode'}-${user.discriminator}`, { type: 'text', parent: this._categoryID ? this._guild.channels.find(x => x.id === this._categoryID) : undefined });
             this._channels.set(user.id, newChannel);
             this.storeOpenChannels();
         }
@@ -108,6 +108,8 @@ class DMManager extends core_1.Plugin {
      * belonging to the user. If it doesn't exist, create one
      */
     async handleMessage(message) {
+        if (message.author.bot)
+            return;
         if (await this.isBlacklisted(message.author))
             return;
         if (message.embeds[0] && message.channel.type !== 'dm')
