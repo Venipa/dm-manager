@@ -15,11 +15,12 @@ export class DMManager extends Plugin implements IPlugin
 	private readonly _client: Client;
 	private readonly _guildID: string;
 	private readonly _defaultChannelID: string;
+	private _categoryID: string;
 	private _storage: SharedProviderStorage;
 	private _guild: Guild;
 	private _channels: Collection<string, TextChannel>;
 
-	public constructor(client: Client, guild: string = '', defaultChannel: string = '')
+	public constructor(client: Client, guild: string = '', defaultChannel: string = '', category?: string)
 	{
 		super();
 		this._client = client;
@@ -123,7 +124,7 @@ export class DMManager extends Plugin implements IPlugin
 		try
 		{
 			newChannel = <TextChannel> await this._guild.channels
-				.create(`${normalize(user.username) || 'unicode'}-${user.discriminator}`, { type: 'text' });
+				.create(`${normalize(user.username) || 'unicode'}-${user.discriminator}`, { type: 'text', parent: this._categoryID });
 			this._channels.set(user.id, newChannel);
 			this.storeOpenChannels();
 		}
