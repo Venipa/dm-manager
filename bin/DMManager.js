@@ -6,7 +6,7 @@ const Util_1 = require("./Util");
 const dmManagerFactory_1 = require("./dmManagerFactory");
 const DMManagerUsageError_1 = require("./DMManagerUsageError");
 class DMManager extends core_1.Plugin {
-    constructor(client, guild = '', defaultChannel = '') {
+    constructor(client, guild = '', defaultChannel = '', category) {
         super();
         this.name = 'DMManager';
         this._client = client;
@@ -81,7 +81,7 @@ class DMManager extends core_1.Plugin {
         let newChannel;
         try {
             newChannel = await this._guild.channels
-                .create(`${Util_1.normalize(user.username) || 'unicode'}-${user.discriminator}`, { type: 'text' });
+                .create(`${Util_1.normalize(user.username) || 'unicode'}-${user.discriminator}`, { type: 'text', parent: this._categoryID });
             this._channels.set(user.id, newChannel);
             this.storeOpenChannels();
         }
@@ -178,9 +178,9 @@ class DMManager extends core_1.Plugin {
         });
     }
 }
+exports.DMManager = DMManager;
 DMManager.default = dmManagerFactory_1.dmManagerFactory;
 DMManager.dmManager = dmManagerFactory_1.dmManagerFactory;
 DMManager.DMManager = DMManager;
-exports.DMManager = DMManager;
 
 //# sourceMappingURL=DMManager.js.map

@@ -8,10 +8,11 @@ export declare class DMManager extends Plugin implements IPlugin {
     private readonly _client;
     private readonly _guildID;
     private readonly _defaultChannelID;
+    private _categoryID;
     private _storage;
     private _guild;
     private _channels;
-    constructor(client: Client, guild?: string, defaultChannel?: string);
+    constructor(client: Client, guild?: string, defaultChannel?: string, category?: string);
     init(storage: SharedProviderStorage): Promise<void>;
     /**
      * Add a user to the DMManager blacklist
