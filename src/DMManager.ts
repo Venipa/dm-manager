@@ -171,6 +171,7 @@ export class DMManager extends Plugin implements IPlugin
 			const channel: TextChannel = this._channels.get(channelID);
 			if (!channel) return;
 			if (message.embeds[0]) message.content += '\n\n**[MessageEmbed]**';
+			if (message.attachments.size > 0) message.content += `\n\n**Attachments**:\n${message.attachments.array().map(x => x.url).join('\n')}`;
 			await this.send(channel, message.author, message.content)
 				.catch(err => this.sendError(`Failed to send message in #${this._channels.get(channelID).name}\n${err}`));
 		}
