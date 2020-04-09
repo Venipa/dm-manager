@@ -138,7 +138,6 @@ class DMManager extends core_1.Plugin {
                 .catch(err => this.sendError(`Failed to send message in #${this._channels.get(channelID).name}\n${err}`));
         }
         else {
-            message.delete();
             const user = await this.fetchUser(message.channel);
             try {
                 await user.send(message.content);
@@ -148,7 +147,9 @@ class DMManager extends core_1.Plugin {
                     .setColor('#FF0000')
                     .setTitle('There was an error while sending the message')
                     .setDescription(err));
+                return;
             }
+            await message.react('✔');
         }
     }
     /**
