@@ -180,7 +180,6 @@ export class DMManager extends Plugin implements IPlugin
 		}
 		else
 		{
-			message.delete();
 			const user: User = await this.fetchUser(<TextChannel> message.channel);
 			try
 			{
@@ -192,7 +191,9 @@ export class DMManager extends Plugin implements IPlugin
 					.setColor('#FF0000')
 					.setTitle('There was an error while sending the message')
 					.setDescription(err));
+					return;
 			}
+			await message.react('✔');
 		}
 	}
 
